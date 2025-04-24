@@ -62,10 +62,10 @@
     "fs": "latest",
     "path": "latest",
     "url": "latest",
-    "@supabase/auth-helpers-nextjs": "latest",
     "react-beautiful-dnd": "latest",
     "ai": "latest",
-    "@ai-sdk/openai": "latest"
+    "@ai-sdk/openai": "latest",
+    "@supabase/auth-helpers-nextjs": "latest"
   },
   "devDependencies": {
     "@types/node": "^22",
