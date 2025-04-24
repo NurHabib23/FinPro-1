@@ -11,16 +11,18 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
+  // This is the key part - we're excluding all App Router features from the build
   experimental: {
-    serverComponentsExternalPackages: ['@supabase/auth-helpers-nextjs'],
+    appDir: false, // Disable App Router completely
   },
   webpack: (config, { isServer }) => {
-    // This is to handle the App Router vs Pages Router conflict
-    if (!isServer) {
-      // Don't resolve 'next/headers' on the client to avoid error
-      config.resolve.alias['next/headers'] = 'next/dist/client/components/headers-noop'
-    }
-    return config
+    // Add a rule to ignore all App Router features
+    config.module.rules.push({
+      test: /next\/headers|next\/navigation|use server/,
+      use: 'null-loader',
+    });
+    
+    return config;
   },
 }
 

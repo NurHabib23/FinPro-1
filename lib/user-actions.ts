@@ -1,14 +1,5 @@
-"use server"
-
-import { getSupabaseServerClient } from "@/lib/supabase"
+import { getSupabaseClient, getSupabaseAdminClient } from "./supabase-client"
 import type { User } from "@/types/database"
-
-// Helper function to revalidate paths without using next/cache
-async function revalidatePath(path: string) {
-  // This is a simplified version that doesn't actually revalidate
-  // In a real app, you would implement this differently
-  console.log(`Would revalidate: ${path}`)
-}
 
 export async function createUser(userData: {
   id: string
@@ -18,7 +9,7 @@ export async function createUser(userData: {
   bio?: string
   avatar_url?: string
 }) {
-  const supabase = getSupabaseServerClient()
+  const supabase = getSupabaseAdminClient()
 
   try {
     // Check if user already exists
@@ -50,12 +41,6 @@ export async function createUser(userData: {
       throw new Error(error.message)
     }
 
-    try {
-      await revalidatePath("/dashboard")
-    } catch (e) {
-      // Ignore revalidation errors
-    }
-
     return data as User
   } catch (error: any) {
     console.error("Error in createUser:", error)
@@ -72,7 +57,7 @@ export async function updateUser(
     avatar_url?: string
   },
 ) {
-  const supabase = getSupabaseServerClient()
+  const supabase = getSupabaseAdminClient()
 
   try {
     const { data, error } = await supabase
@@ -90,12 +75,6 @@ export async function updateUser(
       throw new Error(error.message)
     }
 
-    try {
-      await revalidatePath("/dashboard")
-    } catch (e) {
-      // Ignore revalidation errors
-    }
-
     return data as User
   } catch (error: any) {
     console.error("Error in updateUser:", error)
@@ -104,7 +83,7 @@ export async function updateUser(
 }
 
 export async function getUserById(userId: string) {
-  const supabase = getSupabaseServerClient()
+  const supabase = getSupabaseClient()
 
   try {
     const { data, error } = await supabase.from("users").select("*").eq("id", userId).single()
@@ -122,7 +101,7 @@ export async function getUserById(userId: string) {
 }
 
 export async function getUserByUsername(username: string) {
-  const supabase = getSupabaseServerClient()
+  const supabase = getSupabaseClient()
 
   try {
     const { data, error } = await supabase.from("users").select("*").eq("username", username).single()
